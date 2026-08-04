@@ -1,0 +1,28 @@
+"class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        if not s:
+            return ""
+
+        start, max_len = 0, 0
+
+        def expand_around_center(left: int, right: int) -> int:
+            while left >= 0 and right < len(s) and s[left] == s[right]:
+                left -= 1
+                right += 1
+            # Length of the palindrome found
+            return right - left - 1
+
+        for i in range(len(s)):
+            # Odd length palindromes (e.g., "aba" centered at 'b')
+            len1 = expand_around_center(i, i)
+            # Even length palindromes (e.g., "abba" centered between 'b' and 'b')
+            len2 = expand_around_center(i, i + 1)
+            
+            length = max(len1, len2)
+
+            # Update the longest palindrome bounds
+            if length > max_len:
+                max_len = length
+                start = i - (length - 1) // 2
+
+        return s[start:start + max_len]
